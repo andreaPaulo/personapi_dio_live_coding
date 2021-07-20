@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,10 +33,7 @@ public class PersonService {
 	public MessageResponseDTO createPerson(PersonDTO personDTO) {
 		Person personToSave = personMapper.toModel(personDTO);
 		Person savePerson = personRepository.save(personToSave);
-		return MessageResponseDTO
-				.builder()
-				.message("Created person with id "+ savePerson.getId())
-				.build();
+		return createMessageResponse(savePerson.getId(), "Saved person with id ");
 				
 	}
 	
@@ -54,6 +53,14 @@ public class PersonService {
 		verifyIfExists(id);
 		personRepository.deleteById(id);
 		
+	}	
+	
+
+	public MessageResponseDTO upDateById(long id, @Valid PersonDTO personDTO) throws PersonNotFoundException {
+		verifyIfExists(id);
+		Person personToUpdate = personMapper.toModel(personDTO);
+		Person updatePerson = personRepository.save(personToUpdate);
+		return createMessageResponse(updatePerson.getId(), "Update person with id ");
 	}
 	
 	private Person verifyIfExists(long id) throws PersonNotFoundException{
@@ -61,5 +68,12 @@ public class PersonService {
 				.orElseThrow(()-> new PersonNotFoundException(id));
 				
 				
+	}
+
+	private MessageResponseDTO createMessageResponse(long id , String message) {
+		return MessageResponseDTO
+				.builder()
+				.message(message + id)
+				.build();
 	}
 }
