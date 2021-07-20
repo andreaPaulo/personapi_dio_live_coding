@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,6 +52,12 @@ public class PersonController {
 	public void deleteById(@PathVariable long id) throws PersonNotFoundException{
 		 personService.deleteById(id);
 	}
+	@PutMapping("/{id}")
+	public MessageResponseDTO upDateById(@PathVariable long id, @RequestBody @Valid PersonDTO personDTO) throws PersonNotFoundException {
+		return personService.upDateById(id, personDTO);
+		
+	}
+	
 	
 	
 }
